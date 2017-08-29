@@ -7,4 +7,3 @@ var person ={
     age:20
 };
 console.log('this is javascript object. %j',person);
-console.
