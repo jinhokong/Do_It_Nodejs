@@ -1,0 +1,10 @@
+var url=require('url');
+var urlStr='https://search.naver.com/search.naver?ie=UTF-8&query=popcon&sm=chr_hty';
+var curUrl=url.parse(urlStr);
+var curStr=url.format(curUrl);
+console.log('주소 문자열:%s',curStr);
+console.dir(curUrl);
+console.log('query ->'+curUrl.query);
+var querystring=require('querystring');
+var params=querystring.parse(curUrl.query);
+console.log('검색어'+params.query);
