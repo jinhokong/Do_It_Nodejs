@@ -17,10 +17,11 @@ app.use(function(req,res,next){
    var person={name:'test',age:20};
    //res.send(person)
 
-    //var personStr=JSON.stringify(person);
+    var personStr=JSON.stringify(person);
     //res.send(personStr);
     res.writeHead(200,{"Content-Type":"application/json"});
-    })
+    res.write(personStr);
+    res.end();
 });
 var server=http.createServer(app).listen(app.get('port'),function(){
     console.log('익스프레스로 웹서버를 실행함:'+app.get('port'));
