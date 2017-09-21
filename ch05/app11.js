@@ -4,6 +4,7 @@ var statics=require('serve-static');
 var path=require('path');
 var cookiePaser=require('cookie-parser');
 var bodyparser=require('body-parser');
+var expressSession=require('express-session');
 var app=express();
 
 
@@ -14,9 +15,23 @@ app.use(statics(path.join(__dirname,'public')));
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
 
-app.use(cookiePaser())
+app.use(cookiePaser());
+app.use(expressSession({
+    secret:'my key',
+    resave:true,
+    saveUninitialized:true
+}))
 
 var router=express.Router();
+
+router.route('/process/product').get(function(req,res){
+    console.log('/process/product 라우팅 함수 호출됨.');
+    if(req.session.user){
+        res.redirect('/public/product.html');
+    }else{
+        res.redirect('public/login2.html');
+    }
+})
 
 router.route('/process/setUserCookie').get(function(req,res){
     console.log('/porcess/setUserCookie 라우팅 함수 호출');
@@ -34,19 +49,6 @@ router.route('/process/showCookie').get(function(req,res){
     res.send(req.cookies);
 });
 
-router.route('/process/login/:name').post(function(req,res){
-    console.log('/process/login/:name 라우팅 함수에서 받음.');
-    var paramName=req.params.name;
-    var paramId=req.body.id||req.query.id;
-    var paramPassword=req.body.password||req.query.password;
-    res.writeHead(200,{"Content-Type":"text/html;charset=utf8"});
-    res.write("<h1>서버에서 로그인 응답</h1>");
-    res.write("<div><p>"+paramName+"</p></div>");    
-    res.write("<div><p>"+paramId+"</p></div>");
-    res.write("<div><p>"+paramPassword+"</p></div>");
-    res.end();
-    
-})
 
 app.use('/',router);
 app.all('*',function(req,res){
