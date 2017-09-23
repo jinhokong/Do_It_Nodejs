@@ -63,17 +63,28 @@ router
     } else {
       console.log("파일이 없습니다.");
     }
-    var originalname;
-    var filename;
-    var mimtype;
-    var size;
+    var originalname="";
+    var filename="";
+    var mimtype="";
+    var size=0;
     if (Array.isArray(files)) {
+        console.log("배열에 들어있는 파일 갯수 : %d", files.length);
+        
       for (var i = 0; i < files.length; i++) {
         originalname = files[i].originalname;
         filename = files[i].filename;
         mimtype = files[i].mimetype;
         size = files[i].size;
       }
+      console.log(
+        "현재 파일 정보 : " +
+          originalname +
+          ", " +
+          filename +
+          ", " +
+          mimetype +
+          ", " +
+          size);
     }
 
     res.writeHead(200, { "Content-Type": "text/html;charset=utf8" });
@@ -118,7 +129,7 @@ router.route("/process/login").post(function(req, res) {
 });
 
 router.route("/process/logout").get(function(req, res) {
-  console.log("/process/logout 라우팅 함수 호출");
+    console.log("/process/logout 라우팅 함수 호출");
   if (req.session.user) {
     console.log("로그아웃합니다");
     req.session.destroy(function(err) {
