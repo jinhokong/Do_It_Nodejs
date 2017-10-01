@@ -9,10 +9,10 @@ var crypto = require('crypto');
 
 var Schema = {};
 
-Schema.createSchema = function(mongoose) {
+Schema.createSchema = function(mysql) {
 	
 	// 스키마 정의
-	var UserSchema = mongoose.Schema({
+	var UserSchema = mysql.Schema({
 	    email: {type: String, 'default':''},
 	    hashed_password: {type: String, required: true, 'default':''},
 	    salt: {type:String, required:true},
@@ -24,7 +24,7 @@ Schema.createSchema = function(mongoose) {
 		return email.length;
 	},'email 칼럼이 없습니다.');
 
-	// password를 virtual 메소드로 정의 : MongoDB에 저장되지 않는 편리한 속성임. 특정 속성을 지정하고 set, get 메소드를 정의함
+	// password를 virtual 메소드로 정의 : mysql 저장되지 않는 편리한 속성임. 특정 속성을 지정하고 set, get 메소드를 정의함
 	UserSchema
 	  .virtual('password')
 	  .set(function(password) {

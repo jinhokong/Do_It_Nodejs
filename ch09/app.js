@@ -27,8 +27,8 @@ var expressSession = require('express-session');
   
 
 // 모듈로 분리한 설정 파일 불러오기
-var config = require('./config');
-
+// var config = require('./config');
+var mysql= require('mysql');
 // 모듈로 분리한 데이터베이스 파일 불러오기
 var database = require('./database/database');
 
@@ -82,7 +82,7 @@ app.use(expressSession({
 
 //passport init
 
-app.use(passport.initalize());
+app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
@@ -192,7 +192,31 @@ router.route('/signup').post(passport.authenticate('local-signup',{
 	failureFlash:true
 }))
 
-
+router.route('/profile').get(function(req,res){
+	console.log('/profile 패스로 get 요청됨.');
+	console.log('req.user 객체 정보');
+	console.dir(req.user);
+	if(!req.user){
+		console.log('사용자 인증이 안된 상태');
+		req.redirect('/')
+	
+	}
+	else
+	{
+		console.log('사용자 인증된 상태임.')
+		if(Array.isArray(req.user)){
+			res.render('profile.ejs',{user:req.user[0]._doc});
+		}
+		else{
+			res.render('profile.ejs',{user:req.user});
+		}
+	}
+})
+router.route('/logout').get(function(req,res){
+	console.log('/logiut 패스로 GET요청됨.');
+	req.logout();
+	res.redirect('/');
+})
 //===== 404 에러 페이지 처리 =====//
 var errorHandler = expressErrorHandler({
  static: {

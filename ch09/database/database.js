@@ -8,6 +8,7 @@
  */
 
 var mongoose = require('mongoose');
+var mysql = require('mysql')
 
 // database 객체에 db, schema, model 모두 추가
 var database = {};
@@ -37,6 +38,20 @@ function connect(app, config) {
 		
 	});
 	database.db.on('disconnected', connect);
+	// 데이터베이스 연결 : config의 설정 사용
+    // mysql.Promise = global.Promise;  // mongoose의 Promise 객체는 global의 Promise 객체 사용하도록 함
+	// mysql.connect(config.db_url);
+	// database.db = mysql.connection;
+	
+	// database.db.on('error', console.error.bind(console, 'mysql connection error.'));	
+	// database.db.on('open', function () {
+	// 	console.log('데이터베이스에 연결되었습니다. : ' + config.db_url);
+		
+	// 	// config에 등록된 스키마 및 모델 객체 생성
+	// 	createSchema(app, config);
+		
+	// });
+	// database.db.on('disconnected', connect);
 
 }
 
