@@ -51,9 +51,10 @@ var app = express();
 
 //===== 뷰 엔진 설정 =====//
 app.set('views', __dirname + '/views');
-app.set('view engine', 'pug');
-console.log('뷰 엔진이 pug로 설정되었습니다.');
-
+// app.set('view engine', 'pug');
+// console.log('뷰 엔진이 pug로 설정되었습니다.');
+app.set('view engine','ejs');
+console.log('뷰 엔진이 ejs로 설정되었습니다.');
 
 //===== 서버 변수 설정 및 static으로 public 폴더 설정  =====//
 console.log('config.server_port : %d', config.server_port);
@@ -159,9 +160,37 @@ passport.deserializeUser(function(user,done){
 	done(null,user);
 })
 //라우팅 정보를 읽어들여 라우팅 설정
-route_loader.init(app, express.Router());
+var router=express.Router()
+route_loader.init(app, router);
 
+//회원가입과 로그인 라우팅 함수
+router.route('/').get(function(req,res){
+	console.log('/패스로 요청됨');
+	res.render('index.ejs');
+});
 
+router.route('/login').get(function(req,res){
+	console.log('/login 패스 요청됨');
+	res.render('login.ejs',{message:req.flash('loginMessage')})
+})
+router.route('/login').post(function(req,res){
+	console.log('/login 패스로 post 요청됨.');
+})
+router.route('/login').post(passport.authenticate('local-login',{
+	successRedirect:'/profile',
+	failureRedirect:'/login',
+	failureFlash:true
+}))
+router.route('/signup',function(req,res){
+	console.log('/signup 패스로 get 요청됨');
+	res.render('signup.ejs',{message:req.flash('signupMessage')})
+
+})
+router.route('/signup').post(passport.authenticate('local-signup',{
+	successRedirect:'/profile',
+	failureRedirect:'/signup',
+	failureFlash:true
+}))
 
 
 //===== 404 에러 페이지 처리 =====//
